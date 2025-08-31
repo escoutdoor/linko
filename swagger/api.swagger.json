@@ -1,0 +1,370 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Linko Auth Service",
+    "version": "1.0",
+    "contact": {
+      "name": "Ivan Popov",
+      "email": "vanap387@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "AuthService"
+    },
+    {
+      "name": "UserService"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/auth/login": {
+      "post": {
+        "operationId": "AuthService_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1LoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1LoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/auth/refresh": {
+      "post": {
+        "operationId": "AuthService_RefreshToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RefreshTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1RefreshTokenRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/auth/register": {
+      "post": {
+        "operationId": "AuthService_Register",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RegisterResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1RegisterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuthService"
+        ]
+      }
+    },
+    "/v1/users/{user_id}": {
+      "get": {
+        "summary": "Returns the user by their ID",
+        "operationId": "UserService_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "description": "The identifier of the user to retrieve.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      },
+      "patch": {
+        "summary": "Returns the user after the update",
+        "operationId": "UserService_UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserServiceUpdateUserBody"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "UserServiceUpdateUserBody": {
+      "type": "object",
+      "description": "It represents a set of fields that need to be modified."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1GetUserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/v1User",
+          "description": "The retrieved user."
+        }
+      }
+    },
+    "v1LoginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Email address of the user attempting to log in.\nMust be a valid email format."
+        },
+        "password": {
+          "type": "string",
+          "title": "Password of the user.\nMust be at least 8 characters long.\nMust only contain alphanumeric characters (a-z, A-Z, 0-9)\nand the following special characters: !@#$%^\u0026*()-_+="
+        }
+      }
+    },
+    "v1LoginResponse": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "description": "Access token."
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": "Refresh token."
+        }
+      }
+    },
+    "v1RefreshTokenRequest": {
+      "type": "object",
+      "properties": {
+        "refresh_token": {
+          "type": "string",
+          "description": "The refresh token previously issued to the client.\nMust be in a JWT like format."
+        }
+      }
+    },
+    "v1RefreshTokenResponse": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "description": "Access token."
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": "Refresh token."
+        }
+      }
+    },
+    "v1RegisterRequest": {
+      "type": "object",
+      "properties": {
+        "first_name": {
+          "type": "string",
+          "description": "First name of the user.\nMust be between 1 and 20 characters long."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last name of the user.\nMust be between 1 and 20 characters long."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.\nMust be a valid email format."
+        },
+        "password": {
+          "type": "string",
+          "title": "Password.\nMust be a valid password:\nMust be at least 8 characters long.\nMust only contain alphanumeric characters (a-z, A-Z, 0-9)\nand the following special characters: !@#$%^\u0026*()-_+="
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number.\nShould be a valid phone number."
+        }
+      }
+    },
+    "v1RegisterResponse": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string",
+          "description": "Access token."
+        },
+        "refresh_token": {
+          "type": "string",
+          "description": "Refresh token."
+        }
+      }
+    },
+    "v1UpdateUserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/v1User",
+          "description": "Updated user."
+        }
+      },
+      "description": "Update user response."
+    },
+    "v1User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier of the user."
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First name of the user."
+        },
+        "last_name": {
+          "type": "string",
+          "description": "Last name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user."
+        },
+        "phone_number": {
+          "type": "string",
+          "description": "Phone number of the user."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of creation."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date of the latest update."
+        }
+      }
+    }
+  }
+}

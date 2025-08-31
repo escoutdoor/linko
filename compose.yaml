@@ -1,0 +1,111 @@
+services:
+  auth:
+    container_name: auth
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: auth/Dockerfile
+    ports:
+      - 3465:34
+      - 3865:38
+    env_file:
+      - auth/env.dev
+    depends_on:
+      - user-pg
+      - alloy
+      - otel-collector
+      - loki
+      - prometheus
+
+  user-pg:
+    container_name: user-pg
+    image: postgres:17.5
+    ports:
+      - 5555:5432
+    environment:
+      POSTGRES_DB: users
+      POSTGRES_USER: ivan
+      POSTGRES_PASSWORD: aXZhbiBwb3Bvdg==
+    volumes:
+      - user_pg_data:/var/lib/postgresql/data
+
+  grafana:
+    container_name: grafana
+    restart: on-failure
+    image: grafana/grafana:11.6.1
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config/grafana.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - loki
+
+  alloy:
+    container_name: alloy
+    restart: on-failure
+    image: grafana/alloy:v1.8.2
+    volumes:
+      - ./config/config.alloy:/etc/alloy/config.alloy
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - loki
+    command:
+      - run
+      - /etc/alloy/config.alloy
+      - --storage.path=/var/lib/alloy/data
+      - --server.http.listen-addr=0.0.0.0:12345
+    ports:
+      - 12345:12345
+
+  otel-collector:
+    container_name: otel-collector
+    restart: on-failure
+    image: otel/opentelemetry-collector-contrib
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    depends_on:
+      - jaeger
+    volumes:
+      - ./config/otel.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - 1888:1888 # pprof extension
+      - 13133:13133 # health_check extension
+      - 4317:4317 # OTLP gRPC receiver
+
+  prometheus:
+    container_name: prometheus
+    restart: on-failure
+    image: prom/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+
+  loki:
+    container_name: loki
+    restart: on-failure
+    image: grafana/loki:3.4
+    volumes: 
+      - ./config/loki.yaml:/etc/loki/config.yaml:ro
+    command: -config.file=/etc/loki/config.yaml
+    ports:
+      - 3100:3100
+
+  jaeger:
+    container_name: jaeger
+    restart: on-failure
+    image: jaegertracing/all-in-one:1.48
+    ports:
+      - 16686:16686 # ui
+
+volumes:
+  user_pg_data:
+  grafana_data:
+  prometheus_data:
