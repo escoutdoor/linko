@@ -17,3 +17,10 @@ type AuthService interface {
 	Register(ctx context.Context, in dto.CreateUserParams) (entity.TokenPair, error)
 	RefreshToken(ctx context.Context, refreshToken string) (entity.TokenPair, error)
 }
+
+type RoleService interface {
+	CreateRole(ctx context.Context, name string) (entity.Role, error)
+	GetRole(ctx context.Context, roleID string) (entity.Role, error)
+	ListRoles(ctx context.Context, in dto.ListRolesParams) ([]entity.Role, error)
+	DeleteRole(ctx context.Context, roleID string) error
+}

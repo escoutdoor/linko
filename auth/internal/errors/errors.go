@@ -45,3 +45,12 @@ func EmailAlreadyExists(email string) *Error {
 	msg := fmt.Sprintf("user with email '%s is already exists", email)
 	return newError(codes.EmailAlreadyExists, msg)
 }
+
+func ValidationFailed(msg string) *Error {
+	return newError(codes.ValidationFailed, msg)
+}
+
+func RoleNotFoundWithID(roleID string) *Error {
+	msg := fmt.Sprintf("role with id '%s' was not found", roleID)
+	return newError(codes.RoleNotFound, msg)
+}

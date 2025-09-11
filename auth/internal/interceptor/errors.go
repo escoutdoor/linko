@@ -31,6 +31,8 @@ func ErrorsUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 				err = status.Error(grpccodes.Unauthenticated, appErr.Error())
 			case codes.InvalidJwtToken:
 				err = status.Error(grpccodes.Unauthenticated, appErr.Error())
+			case codes.ValidationFailed:
+				err = status.Error(grpccodes.InvalidArgument, appErr.Error())
 			}
 		} else {
 			err = status.Error(grpccodes.Internal, "internal server error")

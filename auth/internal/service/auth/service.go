@@ -3,16 +3,30 @@ package auth
 import (
 	"github.com/escoutdoor/linko/auth/internal/repository"
 	"github.com/escoutdoor/linko/auth/internal/utils/token"
+	"github.com/escoutdoor/linko/common/pkg/database"
 )
 
 type service struct {
-	userRepository repository.UserRepository
-	tokenProvider  token.Provider
+	userRepository     repository.UserRepository
+	roleRepository     repository.RoleRepository
+	userRoleRepository repository.UserRoleRepository
+
+	tokenProvider token.Provider
+	txManager     database.TxManager
 }
 
-func NewService(userRepository repository.UserRepository, tokenProvider token.Provider) *service {
+func NewService(
+	userRepository repository.UserRepository,
+	roleRepository repository.RoleRepository,
+	userRoleRepository repository.UserRoleRepository,
+	tokenProvider token.Provider,
+	txManager database.TxManager,
+) *service {
 	return &service{
-		userRepository: userRepository,
-		tokenProvider:  tokenProvider,
+		userRepository:     userRepository,
+		roleRepository:     roleRepository,
+		userRoleRepository: userRoleRepository,
+		tokenProvider:      tokenProvider,
+		txManager:          txManager,
 	}
 }

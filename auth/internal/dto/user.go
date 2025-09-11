@@ -7,6 +7,8 @@ type UpdateUserParams struct {
 	Email       *string
 	PhoneNumber *string
 	Password    *string
+	// customer, driver, whatever
+	Roles []string
 }
 
 type CreateUserParams struct {
@@ -15,4 +17,6 @@ type CreateUserParams struct {
 	Email       string
 	PhoneNumber string
 	Password    string
+	// customer, driver, whatever
+	Roles []string
 }

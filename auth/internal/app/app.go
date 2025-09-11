@@ -9,6 +9,7 @@ import (
 
 	"buf.build/go/protovalidate"
 	authv1_implementation "github.com/escoutdoor/linko/auth/internal/api/auth/v1"
+	rolev1_implementation "github.com/escoutdoor/linko/auth/internal/api/role/v1"
 	userv1_implementation "github.com/escoutdoor/linko/auth/internal/api/user/v1"
 	"github.com/escoutdoor/linko/auth/internal/config"
 	"github.com/escoutdoor/linko/auth/internal/interceptor"
@@ -18,6 +19,7 @@ import (
 	common_interceptor "github.com/escoutdoor/linko/common/pkg/interceptor"
 	"github.com/escoutdoor/linko/common/pkg/logger"
 	authv1 "github.com/escoutdoor/linko/common/pkg/proto/auth/v1"
+	rolev1 "github.com/escoutdoor/linko/common/pkg/proto/role/v1"
 	userv1 "github.com/escoutdoor/linko/common/pkg/proto/user/v1"
 	"github.com/escoutdoor/linko/common/pkg/tracing"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -28,6 +30,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const (
@@ -140,9 +143,11 @@ func (a *App) initGrpcServer(ctx context.Context) error {
 
 	authv1Impl := authv1_implementation.NewImplementation(a.di.AuthService(ctx))
 	userv1Impl := userv1_implementation.NewImplementation(a.di.UserService(ctx))
+	rolev1Impl := rolev1_implementation.NewImplementation(a.di.RoleService(ctx))
 
 	authv1.RegisterAuthServiceServer(grpcServer, authv1Impl)
 	userv1.RegisterUserServiceServer(grpcServer, userv1Impl)
+	rolev1.RegisterRoleServiceServer(grpcServer, rolev1Impl)
 
 	reflection.Register(grpcServer)
 
@@ -157,7 +162,18 @@ func (a *App) initGrpcServer(ctx context.Context) error {
 }
 
 func (a *App) initHttpServer(ctx context.Context) error {
-	gwMux := runtime.NewServeMux()
+	gwMux := runtime.NewServeMux(runtime.WithMarshalerOption(
+		runtime.MIMEWildcard, &runtime.HTTPBodyMarshaler{
+			Marshaler: &runtime.JSONPb{
+				MarshalOptions: protojson.MarshalOptions{
+					EmitUnpopulated: true,
+				},
+				UnmarshalOptions: protojson.UnmarshalOptions{
+					DiscardUnknown: true,
+				},
+			},
+		}),
+	)
 
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),

@@ -34,9 +34,22 @@ func (s *service) Register(ctx context.Context, in dto.CreateUserParams) (entity
 	}
 	in.Password = pw
 
-	userID, err := s.userRepository.CreateUser(ctx, in)
-	if err != nil {
-		return entity.TokenPair{}, errwrap.Wrap("create user", err)
+	var userID string
+	if txErr := s.txManager.ReadCommited(ctx, func(ctx context.Context) error {
+		var err error
+
+		userID, err = s.userRepository.CreateUser(ctx, in)
+		if err != nil {
+			return errwrap.Wrap("create user", err)
+		}
+
+		if err := s.userRoleRepository.AddRolesToUser(ctx, userID, in.Roles...); err != nil {
+			return errwrap.Wrap("add roles to user", err)
+		}
+
+		return nil
+	}); txErr != nil {
+		return entity.TokenPair{}, txErr
 	}
 
 	tokens, err := s.tokenProvider.GenerateTokens(userID)
