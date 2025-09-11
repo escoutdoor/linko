@@ -10,6 +10,7 @@ import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -212,17 +213,113 @@ func (x *GetUserResponse) GetUser() *User {
 	return nil
 }
 
+type UserUpdate struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// First name of the user.
+	FirstName string `protobuf:"bytes,1,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	// Last name of the user.
+	LastName string `protobuf:"bytes,2,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	// Email address of the user.
+	Email string `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	// Phone number of the user.
+	PhoneNumber string `protobuf:"bytes,4,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	// Password.
+	Password string `protobuf:"bytes,5,opt,name=password,proto3" json:"password,omitempty"`
+	// Replaces all user roles.
+	// Should be a valid list of UUIDs.
+	Roles         []string `protobuf:"bytes,6,rep,name=roles,proto3" json:"roles,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserUpdate) Reset() {
+	*x = UserUpdate{}
+	mi := &file_user_v1_messages_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserUpdate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserUpdate) ProtoMessage() {}
+
+func (x *UserUpdate) ProtoReflect() protoreflect.Message {
+	mi := &file_user_v1_messages_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserUpdate.ProtoReflect.Descriptor instead.
+func (*UserUpdate) Descriptor() ([]byte, []int) {
+	return file_user_v1_messages_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *UserUpdate) GetFirstName() string {
+	if x != nil {
+		return x.FirstName
+	}
+	return ""
+}
+
+func (x *UserUpdate) GetLastName() string {
+	if x != nil {
+		return x.LastName
+	}
+	return ""
+}
+
+func (x *UserUpdate) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *UserUpdate) GetPhoneNumber() string {
+	if x != nil {
+		return x.PhoneNumber
+	}
+	return ""
+}
+
+func (x *UserUpdate) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+func (x *UserUpdate) GetRoles() []string {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
+}
+
 // It represents a set of fields that need to be modified.
 type UpdateUserRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The id of the user to update.
+	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// Values
+	Update *UserUpdate `protobuf:"bytes,2,opt,name=update,proto3" json:"update,omitempty"`
+	// The fields to update.
+	UpdateMask    *fieldmaskpb.FieldMask `protobuf:"bytes,3,opt,name=update_mask,json=updateMask,proto3" json:"update_mask,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *UpdateUserRequest) Reset() {
 	*x = UpdateUserRequest{}
-	mi := &file_user_v1_messages_proto_msgTypes[3]
+	mi := &file_user_v1_messages_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -234,7 +331,7 @@ func (x *UpdateUserRequest) String() string {
 func (*UpdateUserRequest) ProtoMessage() {}
 
 func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_messages_proto_msgTypes[3]
+	mi := &file_user_v1_messages_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -247,7 +344,7 @@ func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_messages_proto_rawDescGZIP(), []int{3}
+	return file_user_v1_messages_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UpdateUserRequest) GetUserId() string {
@@ -255,6 +352,20 @@ func (x *UpdateUserRequest) GetUserId() string {
 		return x.UserId
 	}
 	return ""
+}
+
+func (x *UpdateUserRequest) GetUpdate() *UserUpdate {
+	if x != nil {
+		return x.Update
+	}
+	return nil
+}
+
+func (x *UpdateUserRequest) GetUpdateMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.UpdateMask
+	}
+	return nil
 }
 
 // Update user response.
@@ -268,7 +379,7 @@ type UpdateUserResponse struct {
 
 func (x *UpdateUserResponse) Reset() {
 	*x = UpdateUserResponse{}
-	mi := &file_user_v1_messages_proto_msgTypes[4]
+	mi := &file_user_v1_messages_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -280,7 +391,7 @@ func (x *UpdateUserResponse) String() string {
 func (*UpdateUserResponse) ProtoMessage() {}
 
 func (x *UpdateUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_messages_proto_msgTypes[4]
+	mi := &file_user_v1_messages_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -293,7 +404,7 @@ func (x *UpdateUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserResponse.ProtoReflect.Descriptor instead.
 func (*UpdateUserResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_messages_proto_rawDescGZIP(), []int{4}
+	return file_user_v1_messages_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *UpdateUserResponse) GetUser() *User {
@@ -307,7 +418,7 @@ var File_user_v1_messages_proto protoreflect.FileDescriptor
 
 const file_user_v1_messages_proto_rawDesc = "" +
 	"\n" +
-	"\x16user/v1/messages.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x81\x02\n" +
+	"\x16user/v1/messages.proto\x12\auser.v1\x1a\x1bbuf/validate/validate.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x81\x02\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +
@@ -322,9 +433,23 @@ const file_user_v1_messages_proto_rawDesc = "" +
 	"\x0eGetUserRequest\x12!\n" +
 	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\"4\n" +
 	"\x0fGetUserResponse\x12!\n" +
-	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\"6\n" +
+	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04user\"\xef\x02\n" +
+	"\n" +
+	"UserUpdate\x12+\n" +
+	"\n" +
+	"first_name\x18\x01 \x01(\tB\f\xbaH\t\xd8\x01\x01r\x04\x10\x01\x18\x14R\tfirstName\x12)\n" +
+	"\tlast_name\x18\x02 \x01(\tB\f\xbaH\t\xd8\x01\x01r\x04\x10\x01\x18\x14R\blastName\x12 \n" +
+	"\x05email\x18\x03 \x01(\tB\n" +
+	"\xbaH\a\xd8\x01\x01r\x02`\x01R\x05email\x12\x80\x01\n" +
+	"\fphone_number\x18\x04 \x01(\tB]\xbaHZ\xba\x01T\n" +
+	"\x12valid_phone_number\x12(phone_number must include a country code\x1a\x14this.startsWith('+')\xd8\x01\x01R\vphoneNumber\x12D\n" +
+	"\bpassword\x18\x05 \x01(\tB(\xbaH%\xd8\x01\x01r \x10\b2\x1c^[a-zA-Z0-9!@#$%^&*()-_+=]*$R\bpassword\x12\x1e\n" +
+	"\x05roles\x18\x06 \x03(\tB\b\xbaH\x05\x92\x01\x02\x18\x01R\x05roles\"\xa0\x01\n" +
 	"\x11UpdateUserRequest\x12!\n" +
-	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\"7\n" +
+	"\auser_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x06userId\x12+\n" +
+	"\x06update\x18\x02 \x01(\v2\x13.user.v1.UserUpdateR\x06update\x12;\n" +
+	"\vupdate_mask\x18\x03 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
+	"updateMask\"7\n" +
 	"\x12UpdateUserResponse\x12!\n" +
 	"\x04user\x18\x01 \x01(\v2\r.user.v1.UserR\x04userB\x96\x01\n" +
 	"\vcom.user.v1B\rMessagesProtoP\x01Z;github.com/escoutdoor/linko/common/pkg/proto/user/v1;userv1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
@@ -341,25 +466,29 @@ func file_user_v1_messages_proto_rawDescGZIP() []byte {
 	return file_user_v1_messages_proto_rawDescData
 }
 
-var file_user_v1_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_user_v1_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_user_v1_messages_proto_goTypes = []any{
 	(*User)(nil),                  // 0: user.v1.User
 	(*GetUserRequest)(nil),        // 1: user.v1.GetUserRequest
 	(*GetUserResponse)(nil),       // 2: user.v1.GetUserResponse
-	(*UpdateUserRequest)(nil),     // 3: user.v1.UpdateUserRequest
-	(*UpdateUserResponse)(nil),    // 4: user.v1.UpdateUserResponse
-	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
+	(*UserUpdate)(nil),            // 3: user.v1.UserUpdate
+	(*UpdateUserRequest)(nil),     // 4: user.v1.UpdateUserRequest
+	(*UpdateUserResponse)(nil),    // 5: user.v1.UpdateUserResponse
+	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil), // 7: google.protobuf.FieldMask
 }
 var file_user_v1_messages_proto_depIdxs = []int32{
-	5, // 0: user.v1.User.created_at:type_name -> google.protobuf.Timestamp
-	5, // 1: user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
+	6, // 0: user.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	6, // 1: user.v1.User.updated_at:type_name -> google.protobuf.Timestamp
 	0, // 2: user.v1.GetUserResponse.user:type_name -> user.v1.User
-	0, // 3: user.v1.UpdateUserResponse.user:type_name -> user.v1.User
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	3, // 3: user.v1.UpdateUserRequest.update:type_name -> user.v1.UserUpdate
+	7, // 4: user.v1.UpdateUserRequest.update_mask:type_name -> google.protobuf.FieldMask
+	0, // 5: user.v1.UpdateUserResponse.user:type_name -> user.v1.User
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_user_v1_messages_proto_init() }
@@ -373,7 +502,7 @@ func file_user_v1_messages_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_messages_proto_rawDesc), len(file_user_v1_messages_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

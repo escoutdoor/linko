@@ -8,7 +8,6 @@ package authv1
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	_ "github.com/escoutdoor/linko/common/pkg/proto/user/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -154,7 +153,9 @@ type RegisterRequest struct {
 	Password string `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
 	// Phone number.
 	// Should be a valid phone number.
-	PhoneNumber   string `protobuf:"bytes,5,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	PhoneNumber string `protobuf:"bytes,5,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	// Roles.
+	Roles         []string `protobuf:"bytes,6,rep,name=roles,proto3" json:"roles,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -222,6 +223,13 @@ func (x *RegisterRequest) GetPhoneNumber() string {
 		return x.PhoneNumber
 	}
 	return ""
+}
+
+func (x *RegisterRequest) GetRoles() []string {
+	if x != nil {
+		return x.Roles
+	}
+	return nil
 }
 
 type RegisterResponse struct {
@@ -382,20 +390,22 @@ var File_auth_v1_messages_proto protoreflect.FileDescriptor
 
 const file_auth_v1_messages_proto_rawDesc = "" +
 	"\n" +
-	"\x16auth/v1/messages.proto\x12\aauth.v1\x1a\x1bbuf/validate/validate.proto\x1a\x16user/v1/messages.proto\"p\n" +
+	"\x16auth/v1/messages.proto\x12\aauth.v1\x1a\x1bbuf/validate/validate.proto\"p\n" +
 	"\fLoginRequest\x12\x1d\n" +
 	"\x05email\x18\x01 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12A\n" +
 	"\bpassword\x18\x02 \x01(\tB%\xbaH\"r \x10\b2\x1c^[a-zA-Z0-9!@#$%^&*()-_+=]*$R\bpassword\"W\n" +
 	"\rLoginResponse\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"\xa2\x02\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"\x8a\x02\n" +
 	"\x0fRegisterRequest\x12(\n" +
 	"\n" +
 	"first_name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x14R\tfirstName\x12&\n" +
 	"\tlast_name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18\x14R\blastName\x12\x1d\n" +
 	"\x05email\x18\x03 \x01(\tB\a\xbaH\x04r\x02`\x01R\x05email\x12A\n" +
-	"\bpassword\x18\x04 \x01(\tB%\xbaH\"r \x10\b2\x1c^[a-zA-Z0-9!@#$%^&*()-_+=]*$R\bpassword\x12[\n" +
-	"\fphone_number\x18\x05 \x01(\tB8\xbaH5r321^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$R\vphoneNumber\"Z\n" +
+	"\bpassword\x18\x04 \x01(\tB%\xbaH\"r \x10\b2\x1c^[a-zA-Z0-9!@#$%^&*()-_+=]*$R\bpassword\x12!\n" +
+	"\fphone_number\x18\x05 \x01(\tR\vphoneNumber\x12 \n" +
+	"\x05roles\x18\x06 \x03(\tB\n" +
+	"\xbaH\a\x92\x01\x04\b\x01\x18\x01R\x05roles\"Z\n" +
 	"\x10RegisterResponse\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
 	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"s\n" +

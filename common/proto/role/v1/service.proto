@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package role.v1;
+
+import "role/v1/messages.proto";
+
+option go_package = "github.com/escoutdoor/linko/common/pkg/proto/role/v1;rolev1";
+
+service RoleService {
+   rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
+
+   rpc GetRole(GetRoleRequest) returns (GetRoleResponse);
+
+   rpc ListRoles(ListRolesRequest) returns (ListRolesResponse);
+
+   rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse);
+}

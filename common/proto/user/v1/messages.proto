@@ -3,6 +3,7 @@ syntax = "proto3";
 package user.v1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/escoutdoor/linko/common/pkg/proto/user/v1;userv1";
@@ -40,9 +41,69 @@ message GetUserResponse {
   User user = 1;
 }
 
+message UserUpdate {
+  // First name of the user.
+  string first_name = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 20
+    }
+  ];
+
+  // Last name of the user.
+  string last_name = 2 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string = {
+      min_len: 1
+      max_len: 20
+    }
+  ];
+
+  // Email address of the user.
+  string email = 3 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string.email = true
+  ];
+
+  // Phone number of the user.
+  string phone_number = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    // A quick validation to ensure a properly formatted phone number.
+    // Further validation is performed using phonenumbers lib.
+    (buf.validate.field).cel = {
+      id: "valid_phone_number"
+      message: "phone_number must include a country code"
+      expression: "this.startsWith('+')"
+    }
+  ];
+
+  // Password.
+  string password = 5 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string = {
+      min_len: 8
+      pattern: "^[a-zA-Z0-9!@#$%^&*()-_+=]*$"
+    }
+  ];
+
+  // Replaces all user roles.
+  // Should be a valid list of UUIDs.
+  repeated string roles = 6 [(buf.validate.field).repeated = {
+    unique: true
+  }];
+}
+
 // It represents a set of fields that need to be modified.
 message UpdateUserRequest {
-    string user_id = 1 [(buf.validate.field).string.uuid = true];
+  // The id of the user to update.
+  string user_id = 1 [(buf.validate.field).string.uuid = true];
+
+  // Values
+  UserUpdate update = 2;
+
+  // The fields to update.
+  google.protobuf.FieldMask update_mask = 3;
 }
 
 // Update user response.

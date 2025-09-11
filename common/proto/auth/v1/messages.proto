@@ -3,7 +3,6 @@ syntax = "proto3";
 package auth.v1;
 
 import "buf/validate/validate.proto";
-import "user/v1/messages.proto";
 
 option go_package = "github.com/escoutdoor/linko/common/pkg/proto/auth/v1;authv1";
 
@@ -61,7 +60,13 @@ message RegisterRequest {
 
   // Phone number.
   // Should be a valid phone number.
-  string phone_number = 5 [(buf.validate.field).string = {pattern: "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$"}];
+  string phone_number = 5;
+
+  // Roles.
+  repeated string roles = 6 [(buf.validate.field).repeated = {
+    min_items: 1
+    unique: true
+  }];
 }
 
 message RegisterResponse {

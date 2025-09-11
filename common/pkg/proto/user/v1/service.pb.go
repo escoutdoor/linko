@@ -26,11 +26,11 @@ var File_user_v1_service_proto protoreflect.FileDescriptor
 
 const file_user_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x15user/v1/service.proto\x12\auser.v1\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x16user/v1/messages.proto2\xcf\x01\n" +
+	"\x15user/v1/service.proto\x12\auser.v1\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x16user/v1/messages.proto2\xd4\x01\n" +
 	"\vUserService\x12Y\n" +
-	"\aGetUser\x12\x17.user.v1.GetUserRequest\x1a\x18.user.v1.GetUserResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/v1/users/{user_id}\x12e\n" +
+	"\aGetUser\x12\x17.user.v1.GetUserRequest\x1a\x18.user.v1.GetUserResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/v1/users/{user_id}\x12j\n" +
 	"\n" +
-	"UpdateUser\x12\x1a.user.v1.UpdateUserRequest\x1a\x1b.user.v1.UpdateUserResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*2\x13/v1/users/{user_id}B\xd9\x01\x92AA\x12;\n" +
+	"UpdateUser\x12\x1a.user.v1.UpdateUserRequest\x1a\x1b.user.v1.UpdateUserResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x06update2\x13/v1/users/{user_id}B\xd9\x01\x92AA\x12;\n" +
 	"\x12Linko User Service\" \n" +
 	"\n" +
 	"Ivan Popov\x1a\x12vanap387@gmail.com2\x031.0*\x02\x01\x02\n" +
