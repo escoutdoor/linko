@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package driver.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "driver/v1/messages.proto";
+
+option go_package = "github.com/escoutdoor/linko/common/pkg/proto/driver/v1;driverv1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Linko Driver Service"
+    version: "1.0"
+    contact: {
+      name: "Ivan Popov"
+      email: "vanap387@gmail.com"
+    }
+  }
+  schemes: HTTP
+  schemes: HTTPS
+};
+
+service DriverService {
+   rpc CreateDriver(CreateDriverRequest) returns (CreateDriverResponse) {
+    option (google.api.http) = {
+      post: "/v1/drivers"
+      body: "*"
+    };
+   }
+
+  rpc UpdateDriver(UpdateDriverRequest) returns (UpdateDriverResponse) {
+    option (google.api.http) = {
+      patch: "/v1/drivers/{driver_id}"
+      body: "update"
+    };
+  }
+
+   rpc GetDriver(GetDriverRequest) returns (GetDriverResponse) {
+    option (google.api.http) = {get: "/v1/drivers/{driver_id}"};
+   }
+
+   rpc ListDrivers(ListDriversRequest) returns (ListDriversResponse) {
+    option (google.api.http) = {
+      get: "/v1/drivers"
+    };
+   }
+
+   rpc DeleteDriver(DeleteDriverRequest) returns (DeleteDriverResponse) {
+    option (google.api.http) = {delete: "/v1/drivers/{driver_id}"};
+   };
+}

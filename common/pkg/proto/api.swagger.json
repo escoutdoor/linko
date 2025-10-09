@@ -13,6 +13,9 @@
       "name": "AuthService"
     },
     {
+      "name": "DriverService"
+    },
+    {
       "name": "RoleService"
     },
     {
@@ -126,6 +129,156 @@
         ]
       }
     },
+    "/v1/drivers": {
+      "get": {
+        "operationId": "DriverService_ListDrivers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListDriversResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "DriverService"
+        ]
+      },
+      "post": {
+        "operationId": "DriverService_CreateDriver",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateDriverResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateDriverRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DriverService"
+        ]
+      }
+    },
+    "/v1/drivers/{driverId}": {
+      "get": {
+        "operationId": "DriverService_GetDriver",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetDriverResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "driverId",
+            "description": "The id of the driver to retrieve",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DriverService"
+        ]
+      },
+      "delete": {
+        "operationId": "DriverService_DeleteDriver",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteDriverResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "driverId",
+            "description": "The id of the driver to delete",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "DriverService"
+        ]
+      },
+      "patch": {
+        "operationId": "DriverService_UpdateDriver",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateDriverResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "driverId",
+            "description": "The id of the driver to update",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "update",
+            "description": "Values",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1DriverUpdate"
+            }
+          }
+        ],
+        "tags": [
+          "DriverService"
+        ]
+      }
+    },
     "/v1/users/{userId}": {
       "get": {
         "summary": "Returns the user by their ID",
@@ -227,6 +380,24 @@
         }
       }
     },
+    "v1CreateDriverRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "title": "The identifier of the user to connect with"
+        }
+      }
+    },
+    "v1CreateDriverResponse": {
+      "type": "object",
+      "properties": {
+        "driver": {
+          "$ref": "#/definitions/v1Driver",
+          "title": "Created driver profile"
+        }
+      }
+    },
     "v1CreateRoleResponse": {
       "type": "object",
       "properties": {
@@ -236,8 +407,56 @@
         }
       }
     },
+    "v1DeleteDriverResponse": {
+      "type": "object"
+    },
     "v1DeleteRoleResponse": {
       "type": "object"
+    },
+    "v1Driver": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "The identifier of the driver"
+        },
+        "userId": {
+          "type": "string",
+          "title": "The identifier of the user connected to this driver account"
+        },
+        "rating": {
+          "type": "number",
+          "format": "float",
+          "title": "The rating of the driver"
+        },
+        "reviewCount": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Review count"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Date of creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Date of the latest update"
+        }
+      }
+    },
+    "v1DriverUpdate": {
+      "type": "object"
+    },
+    "v1GetDriverResponse": {
+      "type": "object",
+      "properties": {
+        "driver": {
+          "$ref": "#/definitions/v1Driver",
+          "title": "The retrieved driver"
+        }
+      }
     },
     "v1GetRoleResponse": {
       "type": "object",
@@ -254,6 +473,19 @@
         "user": {
           "$ref": "#/definitions/v1User",
           "description": "The retrieved user."
+        }
+      }
+    },
+    "v1ListDriversResponse": {
+      "type": "object",
+      "properties": {
+        "drivers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Driver"
+          },
+          "title": "The list of drivers"
         }
       }
     },
@@ -383,6 +615,15 @@
           "type": "string",
           "format": "date-time",
           "description": "Date of the latest update."
+        }
+      }
+    },
+    "v1UpdateDriverResponse": {
+      "type": "object",
+      "properties": {
+        "driver": {
+          "$ref": "#/definitions/v1Driver",
+          "title": "Updated driver"
         }
       }
     },
