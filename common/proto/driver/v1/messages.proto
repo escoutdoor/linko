@@ -1,0 +1,83 @@
+syntax = "proto3";
+package driver.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/escoutdoor/linko/common/pkg/proto/driver/v1;driverv1";
+
+message Driver {
+  // The identifier of the driver
+  string id = 1;
+
+  // The identifier of the user connected to this driver account
+  string user_id = 2;
+
+  // The rating of the driver
+  float rating = 3;
+
+  // Review count 
+  int32 review_count = 4;
+
+  // Date of creation
+  google.protobuf.Timestamp created_at = 5;
+
+  // Date of the latest update
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CreateDriverRequest {
+  // The identifier of the user to connect with
+  string user_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message CreateDriverResponse {
+  // Created driver profile
+  Driver driver = 1;
+}
+
+message DriverUpdate {
+}
+
+message UpdateDriverRequest {
+  // The id of the driver to update
+  string driver_id = 1 [(buf.validate.field).string.uuid = true];
+
+  // Values
+  DriverUpdate update = 2;
+
+  // The fields to update
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message UpdateDriverResponse {
+  // Updated driver
+  Driver driver = 1;
+}
+
+message GetDriverRequest {
+  // The id of the driver to retrieve
+  string driver_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetDriverResponse {
+  // The retrieved driver
+  Driver driver = 1;
+}
+
+message ListDriversRequest {
+
+}
+
+message ListDriversResponse {
+  // The list of drivers
+  repeated Driver drivers = 1;
+}
+
+message DeleteDriverRequest {
+  // The id of the driver to delete
+  string driver_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message DeleteDriverResponse {}
