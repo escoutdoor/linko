@@ -17,13 +17,16 @@ type Driver struct {
 }
 
 func (e Driver) ToServiceEntity() entity.Driver {
+	// this way we get driver's rating
+	rating := e.TotalRatingSum / float64(e.ReviewCount)
+
 	return entity.Driver{
-		ID:             e.ID,
-		UserID:         e.UserID,
-		TotalRatingSum: e.TotalRatingSum,
-		ReviewCount:    e.ReviewCount,
-		CreatedAt:      e.CreatedAt,
-		UpdatedAt:      e.UpdatedAt,
+		ID:          e.ID,
+		UserID:      e.UserID,
+		Rating:      float32(rating),
+		ReviewCount: e.ReviewCount,
+		CreatedAt:   e.CreatedAt,
+		UpdatedAt:   e.UpdatedAt,
 	}
 }
 

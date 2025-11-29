@@ -9,12 +9,10 @@ import (
 )
 
 func DriverToProtoDriver(driver entity.Driver) *driverv1.Driver {
-	rating := driver.TotalRatingSum / float64(driver.ReviewCount)
-
 	return &driverv1.Driver{
 		Id:          driver.ID,
 		UserId:      driver.UserID,
-		Rating:      float32(rating),
+		Rating:      driver.Rating,
 		ReviewCount: driver.ReviewCount,
 		CreatedAt:   timestamppb.New(driver.CreatedAt),
 		UpdatedAt:   timestamppb.New(driver.UpdatedAt),
