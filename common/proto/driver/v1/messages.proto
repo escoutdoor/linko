@@ -7,29 +7,66 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/escoutdoor/linko/common/pkg/proto/driver/v1;driverv1";
 
+enum VehicleType {
+  VEHICLE_TYPE_UNSPECIFIED = 0;
+  VEHICLE_TYPE_CAR = 1;
+  VEHICLE_TYPE_MOTORBIKE = 2;
+  VEHICLE_TYPE_BICYCLE = 3;
+  VEHICLE_TYPE_PEDESTRIAN = 4;
+}
+
+enum DriverStatus {
+  DRIVER_STATUS_UNSPECIFIED = 0;
+  DRIVER_STATUS_OFFLINE = 1;
+  DRIVER_STATUS_ONLINE = 2;
+  DRIVER_STATUS_BUSY = 3;
+}
+
+message Vehicle {
+  // type of the vehicle
+  VehicleType type = 1 [(buf.validate.field).enum.defined_only = true];
+
+  // model of the vehicle
+  string model = 2;
+
+  // number
+  string number = 3;
+
+  // color
+  string color = 4;
+}
+
 message Driver {
   // The identifier of the driver
   string id = 1;
-
   // The identifier of the user connected to this driver account
   string user_id = 2;
 
   // The rating of the driver
   float rating = 3;
-
   // Review count 
   int32 review_count = 4;
 
-  // Date of creation
-  google.protobuf.Timestamp created_at = 5;
+  // Driver activity status (e.g. online)
+  DriverStatus status = 5;
+  // Vehicle details (type, model, number, color etc)
+  Vehicle vehicle = 6;
 
+  // Date of creation
+  google.protobuf.Timestamp created_at = 6;
   // Date of the latest update
-  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
 }
 
 message CreateDriverRequest {
   // The identifier of the user to connect with
   string user_id = 1 [(buf.validate.field).string.uuid = true];
+
+  // vehicle of the driver
+  // caution
+  // a user can create a driver profile without it
+  // but driver is not allowed to take any order without it
+  Vehicle vehicle = 2;
 }
 
 message CreateDriverResponse {
@@ -38,6 +75,11 @@ message CreateDriverResponse {
 }
 
 message DriverUpdate {
+  // driver status
+  DriverStatus status = 1 [(buf.validate.field).enum.defined_only = true];
+
+  // vehicle
+  Vehicle vehicle = 2;
 }
 
 message UpdateDriverRequest {
@@ -67,7 +109,8 @@ message GetDriverResponse {
 }
 
 message ListDriversRequest {
-
+  int32 page_size = 1;
+  string page_token = 2;
 }
 
 message ListDriversResponse {
