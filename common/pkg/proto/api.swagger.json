@@ -146,6 +146,21 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "DriverService"
         ]
@@ -386,6 +401,10 @@
         "userId": {
           "type": "string",
           "title": "The identifier of the user to connect with"
+        },
+        "vehicle": {
+          "$ref": "#/definitions/v1Vehicle",
+          "title": "vehicle of the driver\ncaution\na user can create a driver profile without it\nbut driver is not allowed to take any order without it"
         }
       }
     },
@@ -434,6 +453,14 @@
           "format": "int32",
           "title": "Review count"
         },
+        "status": {
+          "$ref": "#/definitions/v1DriverStatus",
+          "title": "Driver activity status (e.g. online)"
+        },
+        "vehicle": {
+          "$ref": "#/definitions/v1Vehicle",
+          "title": "Vehicle details (type, model, number, color etc)"
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time",
@@ -446,8 +473,28 @@
         }
       }
     },
+    "v1DriverStatus": {
+      "type": "string",
+      "enum": [
+        "DRIVER_STATUS_UNSPECIFIED",
+        "DRIVER_STATUS_OFFLINE",
+        "DRIVER_STATUS_ONLINE",
+        "DRIVER_STATUS_BUSY"
+      ],
+      "default": "DRIVER_STATUS_UNSPECIFIED"
+    },
     "v1DriverUpdate": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/v1DriverStatus",
+          "title": "driver status"
+        },
+        "vehicle": {
+          "$ref": "#/definitions/v1Vehicle",
+          "title": "vehicle"
+        }
+      }
     },
     "v1GetDriverResponse": {
       "type": "object",
@@ -703,6 +750,38 @@
           "description": "Replaces all user roles.\nShould be a valid list of UUIDs."
         }
       }
+    },
+    "v1Vehicle": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/v1VehicleType",
+          "title": "type of the vehicle"
+        },
+        "model": {
+          "type": "string",
+          "title": "model of the vehicle"
+        },
+        "plateNumber": {
+          "type": "string",
+          "title": "plate number"
+        },
+        "color": {
+          "type": "string",
+          "title": "color"
+        }
+      }
+    },
+    "v1VehicleType": {
+      "type": "string",
+      "enum": [
+        "VEHICLE_TYPE_UNSPECIFIED",
+        "VEHICLE_TYPE_CAR",
+        "VEHICLE_TYPE_MOTORBIKE",
+        "VEHICLE_TYPE_BICYCLE",
+        "VEHICLE_TYPE_PEDESTRIAN"
+      ],
+      "default": "VEHICLE_TYPE_UNSPECIFIED"
     }
   }
 }

@@ -29,8 +29,8 @@ message Vehicle {
   // model of the vehicle
   string model = 2;
 
-  // number
-  string number = 3;
+  // plate number
+  string plate_number = 3;
 
   // color
   string color = 4;
@@ -53,9 +53,9 @@ message Driver {
   Vehicle vehicle = 6;
 
   // Date of creation
-  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp created_at = 7;
   // Date of the latest update
-  google.protobuf.Timestamp updated_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
 }
 
 message CreateDriverRequest {
@@ -76,10 +76,15 @@ message CreateDriverResponse {
 
 message DriverUpdate {
   // driver status
-  DriverStatus status = 1 [(buf.validate.field).enum.defined_only = true];
+  DriverStatus status = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).enum.defined_only = true
+  ];
 
   // vehicle
-  Vehicle vehicle = 2;
+  Vehicle vehicle = 2 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED
+  ];
 }
 
 message UpdateDriverRequest {

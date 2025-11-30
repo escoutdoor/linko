@@ -8,12 +8,21 @@ import (
 )
 
 type Driver struct {
-	ID             string    `db:"id"`
-	UserID         string    `db:"user_id"`
-	TotalRatingSum float64   `db:"total_rating_sum"`
-	ReviewCount    int32     `db:"review_count"`
-	CreatedAt      time.Time `db:"created_at"`
-	UpdatedAt      time.Time `db:"updated_at"`
+	ID     string `db:"id"`
+	UserID string `db:"user_id"`
+
+	Status int32 `db:"status"`
+
+	TotalRatingSum float64 `db:"total_rating_sum"`
+	ReviewCount    int32   `db:"review_count"`
+
+	VehicleType        int32  `db:"vehicle_type"`
+	VehicleModel       string `db:"vehicle_model"`
+	VehiclePlateNumber string `db:"vehicle_plate_number"`
+	VehicleColor       string `db:"vehicle_color"`
+
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func (e Driver) ToServiceEntity() entity.Driver {
@@ -25,8 +34,14 @@ func (e Driver) ToServiceEntity() entity.Driver {
 		UserID:      e.UserID,
 		Rating:      float32(rating),
 		ReviewCount: e.ReviewCount,
-		CreatedAt:   e.CreatedAt,
-		UpdatedAt:   e.UpdatedAt,
+		Vehicle: entity.Vehicle{
+			Type:        e.VehicleType,
+			Model:       e.VehicleModel,
+			PlateNumber: e.VehiclePlateNumber,
+			Color:       e.VehicleColor,
+		},
+		CreatedAt: e.CreatedAt,
+		UpdatedAt: e.UpdatedAt,
 	}
 }
 

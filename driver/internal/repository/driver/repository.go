@@ -16,12 +16,21 @@ import (
 const (
 	tableName = "drivers"
 
-	idColumn             = "id"
-	userIDColumn         = "user_id"
+	idColumn     = "id"
+	userIDColumn = "user_id"
+
+	statusColumn = "status"
+
 	totalRatingSumColumn = "total_rating_sum"
 	reviewCountColumn    = "review_count"
-	createdAtColumn      = "created_at"
-	updatedAtColumn      = "updated_at"
+
+	vehicleTypeColumn        = "vehicle_type"
+	vehicleModelColumn       = "vehicle_model"
+	vehiclePlateNumberColumn = "vehicle_plate_number"
+	vehicleColorColumn       = "vehicle_color"
+
+	createdAtColumn = "created_at"
+	updatedAtColumn = "updated_at"
 )
 
 type repository struct {
@@ -37,11 +46,36 @@ func New(db database.Client) *repository {
 }
 
 func (r *repository) CreateDriver(ctx context.Context, in dto.CreateDriverParams) (entity.Driver, error) {
-	sql, args, err := r.qb.Insert(tableName).
+	suffix := `
+	RETURNING 
+		id,
+		user_id,
+		status,
+		total_rating_sum,
+		review_count,
+		vehicle_type,
+		vehicle_model,
+		vehicle_plate_number,
+		vehicle_color,
+		created_at,
+		updated_at
+	`
+
+	builder := r.qb.Insert(tableName).
 		Columns(userIDColumn).
 		Values(in.UserID).
-		Suffix("RETURNING id, user_id, total_rating_sum, review_count, created_at, updated_at").
-		ToSql()
+		Suffix(suffix)
+
+	if in.Vehicle != nil {
+		builder = builder.Columns(
+			vehicleTypeColumn,
+			vehicleModelColumn,
+			vehiclePlateNumberColumn,
+			vehicleColorColumn,
+		)
+	}
+
+	sql, args, err := builder.ToSql()
 	if err != nil {
 		return entity.Driver{}, buildSQLError(err)
 	}
@@ -72,8 +106,13 @@ func (r *repository) GetDriver(ctx context.Context, driverID string) (entity.Dri
 	sql, args, err := r.qb.Select(
 		idColumn,
 		userIDColumn,
+		statusColumn,
 		totalRatingSumColumn,
 		reviewCountColumn,
+		vehicleTypeColumn,
+		vehicleModelColumn,
+		vehiclePlateNumberColumn,
+		vehicleColorColumn,
 		createdAtColumn,
 		updatedAtColumn,
 	).
@@ -110,8 +149,13 @@ func (r *repository) ListDrivers(ctx context.Context, in dto.ListDriversParams) 
 	sql, args, err := r.qb.Select(
 		idColumn,
 		userIDColumn,
+		statusColumn,
 		totalRatingSumColumn,
 		reviewCountColumn,
+		vehicleTypeColumn,
+		vehicleModelColumn,
+		vehiclePlateNumberColumn,
+		vehicleColorColumn,
 		createdAtColumn,
 		updatedAtColumn,
 	).
