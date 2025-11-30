@@ -3,10 +3,23 @@ package entity
 import "time"
 
 type Driver struct {
-	ID          string
-	UserID      string
+	ID     string
+	UserID string
+
+	Status int32
+
 	Rating      float32
 	ReviewCount int32
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+
+	Vehicle Vehicle
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
+type Vehicle struct {
+	Type        int32
+	Model       string
+	PlateNumber string
+	Color       string
 }
