@@ -89,7 +89,7 @@ func Load(paths ...string) error {
 		return errwrap.Wrap("jaeger config", err)
 	}
 
-	appConfig = &config{
+	cfg = &config{
 		App:        appConfig,
 		GrpcServer: grpcServerConfig,
 		HttpServer: httpServerConfig,

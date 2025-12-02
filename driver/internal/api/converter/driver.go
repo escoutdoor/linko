@@ -43,12 +43,25 @@ func ProtoCreateDriverRequestToCreateDriverParams(req *driverv1.CreateDriverRequ
 	params := dto.CreateDriverParams{UserID: req.GetUserId()}
 	vehicle := req.GetVehicle()
 
-	if req.GetVehicle() != nil {
-		params.Vehicle = &dto.VehicleParams{
-			Type:        int32(vehicle.GetType()),
-			Model:       vehicle.GetModel(),
-			PlateNumber: vehicle.GetPlateNumber(),
-			Color:       vehicle.GetColor(),
+	if vehicle != nil {
+		if req.Vehicle.GetType() != 0 {
+			vehicleType := int32(vehicle.GetType())
+			params.Vehicle.Type = &vehicleType
+		}
+
+		if req.Vehicle.GetModel() != "" {
+			vehicleModel := vehicle.GetModel()
+			params.Vehicle.Model = &vehicleModel
+		}
+
+		if req.Vehicle.GetPlateNumber() != "" {
+			vehiclePlateNumber := vehicle.GetPlateNumber()
+			params.Vehicle.PlateNumber = &vehiclePlateNumber
+		}
+
+		if req.Vehicle.GetColor() != "" {
+			vehicleColor := vehicle.GetColor()
+			params.Vehicle.Color = &vehicleColor
 		}
 	}
 
@@ -98,7 +111,7 @@ func ProtoUpdateDriverRequestToUpdateDriverParams(req *driverv1.UpdateDriverRequ
 				return dto.UpdateDriverParams{}, apperrors.ValidationFailed("vehicle type is specified in update mask, but has no value")
 			}
 
-			vehicle := &dto.VehicleParams{
+			vehicle := &dto.UpdateVehicleParams{
 				Type:        int32(vehicleType),
 				Model:       v.GetModel(),
 				PlateNumber: v.GetPlateNumber(),

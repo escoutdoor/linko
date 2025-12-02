@@ -11,12 +11,16 @@ import (
 func (s *service) UpdateDriver(ctx context.Context, in dto.UpdateDriverParams) (entity.Driver, error) {
 	_, err := s.driverRepository.GetDriver(ctx, in.DriverID)
 	if err != nil {
-		return entity.Driver{}, errwrap.Wrap("get driver from repository", err)
+		return entity.Driver{}, errwrap.Wrap("get driver from repository before update operation", err)
 	}
 
-	driver, err := s.driverRepository.UpdateDriver(ctx, in)
-	if err != nil {
+	if err := s.driverRepository.UpdateDriver(ctx, in); err != nil {
 		return entity.Driver{}, errwrap.Wrap("update driver", err)
+	}
+
+	driver, err := s.driverRepository.GetDriver(ctx, in.DriverID)
+	if err != nil {
+		return entity.Driver{}, errwrap.Wrap("get updated driver from repository", err)
 	}
 
 	return driver, nil

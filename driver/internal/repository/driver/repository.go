@@ -98,8 +98,38 @@ func (r *repository) CreateDriver(ctx context.Context, in dto.CreateDriverParams
 	return driver.ToServiceEntity(), nil
 }
 
-func (r *repository) UpdateDriver(ctx context.Context, in dto.UpdateDriverParams) (entity.Driver, error) {
-	return entity.Driver{}, nil
+func (r *repository) UpdateDriver(ctx context.Context, in dto.UpdateDriverParams) error {
+	builder := r.qb.Update(tableName).Where(sq.Eq{idColumn: in.DriverID})
+	if in.Status != nil {
+		builder = builder.Set(statusColumn, in.Status)
+	}
+
+	if in.Vehicle != nil {
+		update := map[string]any{
+			vehicleTypeColumn:        in.Vehicle.Type,
+			vehicleModelColumn:       in.Vehicle.Model,
+			vehiclePlateNumberColumn: in.Vehicle.PlateNumber,
+			vehicleColorColumn:       in.Vehicle.Color,
+		}
+
+		builder = builder.SetMap(update)
+	}
+
+	sql, args, err := builder.ToSql()
+	if err != nil {
+		return buildSQLError(err)
+	}
+
+	q := database.Query{
+		Name: "driver_repository.UpdateDriver",
+		Sql:  sql,
+	}
+
+	if _, err := r.db.DB().ExecContext(ctx, q, args); err != nil {
+		return executeSQLError(err)
+	}
+
+	return nil
 }
 
 func (r *repository) GetDriver(ctx context.Context, driverID string) (entity.Driver, error) {

@@ -2,13 +2,13 @@ package dto
 
 type CreateDriverParams struct {
 	UserID  string
-	Vehicle *VehicleParams
+	Vehicle *CreateVehicleParams
 }
 
 type UpdateDriverParams struct {
 	DriverID string
 	Status   *int32
-	Vehicle  *VehicleParams
+	Vehicle  *UpdateVehicleParams
 }
 
 type ListDriversParams struct {
@@ -16,7 +16,14 @@ type ListDriversParams struct {
 	PageToken string
 }
 
-type VehicleParams struct {
+type CreateVehicleParams struct {
+	Type        *int32
+	Model       *string
+	PlateNumber *string
+	Color       *string
+}
+
+type UpdateVehicleParams struct {
 	Type        int32
 	Model       string
 	PlateNumber string
