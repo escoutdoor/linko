@@ -16,13 +16,13 @@ func main() {
 		logger.Fatal(ctx, "load config:", err)
 	}
 
-	if config.AppConfig().Service.IsProd() {
+	if config.Config().App.IsProd() {
 		logger.SetLevel(zap.InfoLevel)
 	} else {
 		logger.SetLevel(zap.DebugLevel)
 	}
 
-	closer.SetShutdownTimeout(config.AppConfig().Service.GracefulShutdownTimeout())
+	closer.SetShutdownTimeout(config.Config().App.GracefulShutdownTimeout())
 
 	a, err := app.New(ctx)
 	if err != nil {
