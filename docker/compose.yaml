@@ -1,0 +1,10 @@
+name: linko
+
+include:
+  - path: compose.infra.yaml
+  - path: compose.o11y.yaml
+  - path: compose.apps.yaml
+
+networks:
+  linko-net:
+    driver: bridge
