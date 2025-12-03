@@ -57,7 +57,7 @@ func New(ctx context.Context) (*App, error) {
 	}
 
 	db := stdlib.OpenDBFromPool(app.di.DBClient(ctx).DB().Pool())
-	if err := goose.UpContext(ctx, db, config.AppConfig().Postgres.MigrationsDir()); err != nil {
+	if err := goose.UpContext(ctx, db, config.Config().Postgres.MigrationsDir()); err != nil {
 		return nil, errwrap.Wrap("migrate up", err)
 	}
 
@@ -112,7 +112,7 @@ func (a *App) initDeps(ctx context.Context) error {
 }
 
 func (a *App) initTracing(ctx context.Context) error {
-	if err := tracing.Init(ctx, config.AppConfig().GrpcServer.Address(), config.AppConfig().Service.Name()); err != nil {
+	if err := tracing.Init(ctx, config.Config().GrpcServer.Address(), config.Config().App.Name()); err != nil {
 		return errwrap.Wrap("init tracing", err)
 	}
 
@@ -120,7 +120,7 @@ func (a *App) initTracing(ctx context.Context) error {
 }
 
 func (a *App) initMetrics(_ context.Context) error {
-	metrics.Init(config.AppConfig().Prometheus.Namespace(), config.AppConfig().Service.Name())
+	metrics.Init(config.Config().Prometheus.Namespace(), config.Config().App.Name())
 	return nil
 }
 
@@ -179,11 +179,11 @@ func (a *App) initHttpServer(ctx context.Context) error {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 
-	if err := userv1.RegisterUserServiceHandlerFromEndpoint(ctx, gwMux, config.AppConfig().GrpcServer.Address(), opts); err != nil {
+	if err := userv1.RegisterUserServiceHandlerFromEndpoint(ctx, gwMux, config.Config().GrpcServer.Address(), opts); err != nil {
 		return errwrap.Wrap("register user service handler from endpoint", err)
 	}
 
-	if err := authv1.RegisterAuthServiceHandlerFromEndpoint(ctx, gwMux, config.AppConfig().GrpcServer.Address(), opts); err != nil {
+	if err := authv1.RegisterAuthServiceHandlerFromEndpoint(ctx, gwMux, config.Config().GrpcServer.Address(), opts); err != nil {
 		return errwrap.Wrap("register auth service handler from endpoint", err)
 	}
 
@@ -196,7 +196,7 @@ func (a *App) initHttpServer(ctx context.Context) error {
 	mux.Handle("/docs/", http.StripPrefix("/docs/", http.FileServer(http.Dir(swaggerUIDir))))
 
 	s := &http.Server{
-		Addr:              config.AppConfig().HttpServer.Address(),
+		Addr:              config.Config().HttpServer.Address(),
 		Handler:           mux,
 		ReadTimeout:       time.Second * 5,
 		ReadHeaderTimeout: time.Second * 5,
@@ -216,7 +216,7 @@ func (a *App) initPrometheusServer(ctx context.Context) error {
 	mux.Handle("/metrics", promhttp.Handler())
 
 	a.prometheusServer = &http.Server{
-		Addr:              config.AppConfig().Prometheus.Address(),
+		Addr:              config.Config().Prometheus.Address(),
 		Handler:           mux,
 		ReadTimeout:       time.Second * 5,
 		ReadHeaderTimeout: time.Second * 5,
@@ -229,7 +229,7 @@ func (a *App) initPrometheusServer(ctx context.Context) error {
 }
 
 func (a *App) runGrpcServer() error {
-	ln, err := net.Listen("tcp", config.AppConfig().GrpcServer.Address())
+	ln, err := net.Listen("tcp", config.Config().GrpcServer.Address())
 	if err != nil {
 		return errwrap.Wrap("net listen", err)
 	}

@@ -40,7 +40,7 @@ func newDiContainer() *di {
 
 func (d *di) DBClient(ctx context.Context) database.Client {
 	if d.dbClient == nil {
-		client, err := pg.NewClient(ctx, config.AppConfig().Postgres.Dsn())
+		client, err := pg.NewClient(ctx, config.Config().Postgres.Dsn())
 		if err != nil {
 			logger.Fatal(ctx, "new database client", err)
 		}
@@ -94,10 +94,10 @@ func (d *di) RoleService(ctx context.Context) service.RoleService {
 func (d *di) TokenProvider(ctx context.Context) token.Provider {
 	if d.tokenProvider == nil {
 		d.tokenProvider = token.NewTokenProvider(
-			config.AppConfig().JwtToken.AccessTokenSecretKey(),
-			config.AppConfig().JwtToken.RefreshTokenSecretKey(),
-			config.AppConfig().JwtToken.AccessTokenTTL(),
-			config.AppConfig().JwtToken.RefreshTokenTTL(),
+			config.Config().JwtToken.AccessTokenSecretKey(),
+			config.Config().JwtToken.RefreshTokenSecretKey(),
+			config.Config().JwtToken.AccessTokenTTL(),
+			config.Config().JwtToken.RefreshTokenTTL(),
 		)
 	}
 
