@@ -1,0 +1,41 @@
+name: linko-apps
+services:
+  auth:
+    container_name: auth
+    restart: on-failure
+    build:
+      context: ../
+      dockerfile: auth/Dockerfile
+    ports:
+      - 3465:34
+      - 3865:38
+    env_file:
+      - ../auth/env.dev
+    depends_on:
+      - user-pg
+      - alloy
+      - otel-collector
+      - loki
+      - prometheus
+    networks:
+      - linko-net
+    
+  driver:
+    container_name: driver
+    restart: on-failure
+    build:
+      context: ../
+      dockerfile: driver/Dockerfile
+    ports:
+      - 3466:34
+      - 3866:38
+    env_file:
+      - ../driver/env.dev
+    depends_on:
+      - driver-pg
+      - alloy
+      - otel-collector
+      - loki
+      - prometheus
+    networks:
+      - linko-net

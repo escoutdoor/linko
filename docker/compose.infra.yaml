@@ -1,0 +1,33 @@
+name: linko-infra
+services:
+  user-pg:
+    container_name: user-pg
+    image: postgres:17.5
+    ports:
+      - 5555:5432
+    environment:
+      POSTGRES_DB: users
+      POSTGRES_USER: ivan
+      POSTGRES_PASSWORD: aXZhbiBwb3Bvdg==
+    volumes:
+      - user_pg_data:/var/lib/postgresql/data
+    networks:
+      - linko-net
+
+  driver-pg:
+    container_name: driver-pg
+    image: postgres:17.5
+    ports:
+      - 5556:5432
+    environment:
+      POSTGRES_DB: drivers
+      POSTGRES_USER: ivan
+      POSTGRES_PASSWORD: aXZhbiBwb3Bvdg==
+    volumes:
+      - driver_pg_data:/var/lib/postgresql/data
+    networks:
+      - linko-net
+
+volumes:
+  user_pg_data:
+  driver_pg_data:

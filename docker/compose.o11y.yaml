@@ -1,34 +1,5 @@
+name: linko-o11y
 services:
-  auth:
-    container_name: auth
-    restart: on-failure
-    build:
-      context: .
-      dockerfile: auth/Dockerfile
-    ports:
-      - 3465:34
-      - 3865:38
-    env_file:
-      - auth/env.dev
-    depends_on:
-      - user-pg
-      - alloy
-      - otel-collector
-      - loki
-      - prometheus
-
-  user-pg:
-    container_name: user-pg
-    image: postgres:17.5
-    ports:
-      - 5555:5432
-    environment:
-      POSTGRES_DB: users
-      POSTGRES_USER: ivan
-      POSTGRES_PASSWORD: aXZhbiBwb3Bvdg==
-    volumes:
-      - user_pg_data:/var/lib/postgresql/data
-
   grafana:
     container_name: grafana
     restart: on-failure
@@ -44,6 +15,8 @@ services:
       - grafana_data:/var/lib/grafana
     depends_on:
       - loki
+    networks:
+      - linko-net
 
   alloy:
     container_name: alloy
@@ -61,6 +34,8 @@ services:
       - --server.http.listen-addr=0.0.0.0:12345
     ports:
       - 12345:12345
+    networks:
+      - linko-net
 
   otel-collector:
     container_name: otel-collector
@@ -75,6 +50,8 @@ services:
       - 1888:1888 # pprof extension
       - 13133:13133 # health_check extension
       - 4317:4317 # OTLP gRPC receiver
+    networks:
+      - linko-net
 
   prometheus:
     container_name: prometheus
@@ -87,6 +64,8 @@ services:
     volumes:
       - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
+    networks:
+      - linko-net
 
   loki:
     container_name: loki
@@ -97,6 +76,8 @@ services:
     command: -config.file=/etc/loki/config.yaml
     ports:
       - 3100:3100
+    networks:
+      - linko-net
 
   jaeger:
     container_name: jaeger
@@ -104,8 +85,9 @@ services:
     image: jaegertracing/all-in-one:1.48
     ports:
       - 16686:16686 # ui
+    networks:
+      - linko-net
 
 volumes:
-  user_pg_data:
   grafana_data:
   prometheus_data:

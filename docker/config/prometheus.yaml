@@ -17,3 +17,11 @@ scrape_configs:
     static_configs:
       # prometheus server address
       - targets: ['host.docker.internal:1200']
+
+  - job_name: 'driver'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+    static_configs:
+      # prometheus server address
+      - targets: ['host.docker.internal:1201']
