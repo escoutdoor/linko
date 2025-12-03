@@ -9,7 +9,7 @@ import (
 )
 
 type config struct {
-	Service    ServiceConfig
+	App        AppConfig
 	GrpcServer GrpcServerConfig
 	HttpServer HttpServerConfig
 	Prometheus PrometheusConfig
@@ -18,13 +18,13 @@ type config struct {
 	JwtToken   JwtTokenConfig
 }
 
-var appConfig *config
+var cfg *config
 
-func AppConfig() *config {
-	return appConfig
+func Config() *config {
+	return cfg
 }
 
-type ServiceConfig interface {
+type AppConfig interface {
 	Name() string
 	Stage() string
 	IsProd() bool
@@ -67,9 +67,9 @@ func Load(paths ...string) error {
 		}
 	}
 
-	serviceConfig, err := env.NewServiceConfig()
+	appConfig, err := env.NewAppConfig()
 	if err != nil {
-		return errwrap.Wrap("service config", err)
+		return errwrap.Wrap("app config", err)
 	}
 
 	grpcServerConfig, err := env.NewGrpcServerConfig()
@@ -102,8 +102,8 @@ func Load(paths ...string) error {
 		return errwrap.Wrap("jwt token config", err)
 	}
 
-	appConfig = &config{
-		Service:    serviceConfig,
+	cfg = &config{
+		App:        appConfig,
 		GrpcServer: grpcServerConfig,
 		HttpServer: httpServerConfig,
 		Prometheus: prometheusConfig,

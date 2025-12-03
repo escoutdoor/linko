@@ -5,12 +5,10 @@ WORKDIR /app
 COPY auth/go.mod auth/go.sum ./auth/
 COPY common/go.mod common/go.sum ./common/
 
-#
 WORKDIR /app/auth
 
 RUN go mod download
 
-# 
 WORKDIR /app
 
 COPY auth auth
