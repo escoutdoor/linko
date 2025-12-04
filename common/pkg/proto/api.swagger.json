@@ -149,6 +149,7 @@
         "parameters": [
           {
             "name": "pageSize",
+            "description": "page size",
             "in": "query",
             "required": false,
             "type": "integer",
@@ -156,6 +157,7 @@
           },
           {
             "name": "pageToken",
+            "description": "page token",
             "in": "query",
             "required": false,
             "type": "string"
@@ -533,6 +535,10 @@
             "$ref": "#/definitions/v1Driver"
           },
           "title": "The list of drivers"
+        },
+        "nextPageToken": {
+          "type": "string",
+          "description": "A token, which can be sent as `page_token` to retrieve the next page.\nIf this field is omitted, there are no subsequent pages."
         }
       }
     },

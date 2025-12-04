@@ -666,9 +666,11 @@ func (x *GetDriverResponse) GetDriver() *Driver {
 }
 
 type ListDriversRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	PageSize      int32                  `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
-	PageToken     string                 `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// page size
+	PageSize int32 `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// page token
+	PageToken     string `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -720,7 +722,10 @@ func (x *ListDriversRequest) GetPageToken() string {
 type ListDriversResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The list of drivers
-	Drivers       []*Driver `protobuf:"bytes,1,rep,name=drivers,proto3" json:"drivers,omitempty"`
+	Drivers []*Driver `protobuf:"bytes,1,rep,name=drivers,proto3" json:"drivers,omitempty"`
+	// A token, which can be sent as `page_token` to retrieve the next page.
+	// If this field is omitted, there are no subsequent pages.
+	NextPageToken string `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -760,6 +765,13 @@ func (x *ListDriversResponse) GetDrivers() []*Driver {
 		return x.Drivers
 	}
 	return nil
+}
+
+func (x *ListDriversResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
 }
 
 type DeleteDriverRequest struct {
@@ -882,13 +894,14 @@ const file_driver_v1_messages_proto_rawDesc = "" +
 	"\x10GetDriverRequest\x12%\n" +
 	"\tdriver_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\bdriverId\">\n" +
 	"\x11GetDriverResponse\x12)\n" +
-	"\x06driver\x18\x01 \x01(\v2\x11.driver.v1.DriverR\x06driver\"P\n" +
-	"\x12ListDriversRequest\x12\x1b\n" +
-	"\tpage_size\x18\x01 \x01(\x05R\bpageSize\x12\x1d\n" +
+	"\x06driver\x18\x01 \x01(\v2\x11.driver.v1.DriverR\x06driver\"[\n" +
+	"\x12ListDriversRequest\x12&\n" +
+	"\tpage_size\x18\x01 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\bpageSize\x12\x1d\n" +
 	"\n" +
-	"page_token\x18\x02 \x01(\tR\tpageToken\"B\n" +
+	"page_token\x18\x02 \x01(\tR\tpageToken\"j\n" +
 	"\x13ListDriversResponse\x12+\n" +
-	"\adrivers\x18\x01 \x03(\v2\x11.driver.v1.DriverR\adrivers\"<\n" +
+	"\adrivers\x18\x01 \x03(\v2\x11.driver.v1.DriverR\adrivers\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\"<\n" +
 	"\x13DeleteDriverRequest\x12%\n" +
 	"\tdriver_id\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\bdriverId\"\x16\n" +
 	"\x14DeleteDriverResponse*\x94\x01\n" +

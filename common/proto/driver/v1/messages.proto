@@ -114,13 +114,23 @@ message GetDriverResponse {
 }
 
 message ListDriversRequest {
-  int32 page_size = 1;
+  // page size
+  int32 page_size = 1 [(buf.validate.field).int32 = {
+    gte: 1
+    lte: 100
+  }];
+
+  // page token
   string page_token = 2;
 }
 
 message ListDriversResponse {
   // The list of drivers
   repeated Driver drivers = 1;
+
+  // A token, which can be sent as `page_token` to retrieve the next page.
+  // If this field is omitted, there are no subsequent pages.
+  string next_page_token = 2;
 }
 
 message DeleteDriverRequest {
