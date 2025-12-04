@@ -1,10 +1,12 @@
 package converter
 
 import (
+	"github.com/escoutdoor/linko/common/pkg/errwrap"
 	driverv1 "github.com/escoutdoor/linko/common/pkg/proto/driver/v1"
 	"github.com/escoutdoor/linko/driver/internal/dto"
 	"github.com/escoutdoor/linko/driver/internal/entity"
 	apperrors "github.com/escoutdoor/linko/driver/internal/errors"
+	"github.com/escoutdoor/linko/driver/internal/pagination"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -68,11 +70,16 @@ func ProtoCreateDriverRequestToCreateDriverParams(req *driverv1.CreateDriverRequ
 	return params
 }
 
-func ProtoListDriversRequestToListDriversParams(req *driverv1.ListDriversRequest) dto.ListDriversParams {
-	return dto.ListDriversParams{
-		PageSize:  req.GetPageSize(),
-		PageToken: req.GetPageToken(),
+func ProtoListDriversRequestToListDriversParams(req *driverv1.ListDriversRequest) (dto.ListDriversParams, error) {
+	cursor, err := pagination.DecodeCursor(req.GetPageToken())
+	if err != nil {
+		return dto.ListDriversParams{}, errwrap.Wrap("decode cursor", err)
 	}
+
+	return dto.ListDriversParams{
+		PageSize: req.GetPageSize(),
+		Cursor:   cursor,
+	}, nil
 }
 
 func ProtoUpdateDriverRequestToUpdateDriverParams(req *driverv1.UpdateDriverRequest) (dto.UpdateDriverParams, error) {

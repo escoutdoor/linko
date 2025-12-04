@@ -9,7 +9,8 @@ import (
 )
 
 func (s *service) ListDrivers(ctx context.Context, in dto.ListDriversParams) ([]entity.Driver, error) {
-	drivers, err := s.driverRepository.ListDrivers(ctx, in)
+	limit := in.PageSize + 1
+	drivers, err := s.driverRepository.ListDrivers(ctx, limit, in.Cursor)
 	if err != nil {
 		return nil, errwrap.Wrap("list drivers from repository", err)
 	}

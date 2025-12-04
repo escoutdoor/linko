@@ -1,5 +1,7 @@
 package dto
 
+import "github.com/escoutdoor/linko/driver/internal/pagination"
+
 type CreateDriverParams struct {
 	UserID  string
 	Vehicle *CreateVehicleParams
@@ -12,8 +14,8 @@ type UpdateDriverParams struct {
 }
 
 type ListDriversParams struct {
-	PageSize  int32
-	PageToken string
+	PageSize int32
+	Cursor   *pagination.Cursor
 }
 
 type CreateVehicleParams struct {

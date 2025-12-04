@@ -3,12 +3,14 @@ package driver
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/escoutdoor/linko/common/pkg/database"
 	"github.com/escoutdoor/linko/driver/internal/dto"
 	"github.com/escoutdoor/linko/driver/internal/entity"
 	apperrors "github.com/escoutdoor/linko/driver/internal/errors"
+	"github.com/escoutdoor/linko/driver/internal/pagination"
 	"github.com/georgysavva/scany/v2/pgxscan"
 	"github.com/jackc/pgx/v5"
 )
@@ -175,8 +177,8 @@ func (r *repository) GetDriver(ctx context.Context, driverID string) (entity.Dri
 	return driver.ToServiceEntity(), nil
 }
 
-func (r *repository) ListDrivers(ctx context.Context, in dto.ListDriversParams) ([]entity.Driver, error) {
-	sql, args, err := r.qb.Select(
+func (r *repository) ListDrivers(ctx context.Context, limit int32, cursor *pagination.Cursor) ([]entity.Driver, error) {
+	builder := r.qb.Select(
 		idColumn,
 		userIDColumn,
 		statusColumn,
@@ -190,7 +192,18 @@ func (r *repository) ListDrivers(ctx context.Context, in dto.ListDriversParams) 
 		updatedAtColumn,
 	).
 		From(tableName).
-		ToSql()
+		OrderBy(createdAtColumn+" DESC", idColumn+" DESC").
+		Limit(uint64(limit))
+
+	if cursor != nil {
+		builder = builder.Where(
+			fmt.Sprintf("(%s, %s) < (?, ?)", createdAtColumn, idColumn),
+			cursor.CreatedAt,
+			cursor.ID,
+		)
+	}
+
+	sql, args, err := builder.ToSql()
 	if err != nil {
 		return nil, buildSQLError(err)
 	}
