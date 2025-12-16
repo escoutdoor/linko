@@ -13,6 +13,9 @@
       "name": "AuthService"
     },
     {
+      "name": "CatalogService"
+    },
+    {
       "name": "DriverService"
     },
     {
@@ -126,6 +129,180 @@
         ],
         "tags": [
           "AuthService"
+        ]
+      }
+    },
+    "/v1/categories": {
+      "get": {
+        "operationId": "CatalogService_CreateCategory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateCategoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      }
+    },
+    "/v1/categories/{categoryId}": {
+      "get": {
+        "operationId": "CatalogService_GetCategory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCategoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      },
+      "delete": {
+        "operationId": "CatalogService_DeleteCategory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteCategoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      },
+      "patch": {
+        "operationId": "CatalogService_UpdateCategory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateCategoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "update",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CategoryUpdate"
+            }
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      }
+    },
+    "/v1/categories/{storeId}": {
+      "get": {
+        "operationId": "CatalogService_ListCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "storeId",
+            "description": "To list categories, we must know the store",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
         ]
       }
     },
@@ -296,6 +473,293 @@
         ]
       }
     },
+    "/v1/products": {
+      "post": {
+        "operationId": "CatalogService_CreateProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateProductResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateProductRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      }
+    },
+    "/v1/products/{productId}": {
+      "get": {
+        "operationId": "CatalogService_GetProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetProductResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      },
+      "delete": {
+        "operationId": "CatalogService_DeleteProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteProductResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      },
+      "patch": {
+        "operationId": "CatalogService_UpdateProduct",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateProductResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "update",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ProductUpdate"
+            }
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      }
+    },
+    "/v1/stores": {
+      "get": {
+        "operationId": "CatalogService_ListStores",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListStoresResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      },
+      "post": {
+        "operationId": "CatalogService_CreateStore",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CreateStoreResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateStoreRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      }
+    },
+    "/v1/stores/{storeId}": {
+      "get": {
+        "operationId": "CatalogService_GetStore",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetStoreResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      },
+      "delete": {
+        "operationId": "CatalogService_DeleteStore",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteStoreResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      },
+      "patch": {
+        "operationId": "CatalogService_UpdateStore",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateStoreResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "update",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1StoreUpdate"
+            }
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      }
+    },
     "/v1/users/{userId}": {
       "get": {
         "summary": "Returns the user by their ID",
@@ -397,6 +861,36 @@
         }
       }
     },
+    "v1Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "storeId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CategoryUpdate": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateCategoryResponse": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/v1Category"
+        }
+      }
+    },
     "v1CreateDriverRequest": {
       "type": "object",
       "properties": {
@@ -419,6 +913,42 @@
         }
       }
     },
+    "v1CreateProductRequest": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "priceCents": {
+          "type": "string",
+          "format": "int64"
+        },
+        "weightGrams": {
+          "type": "string",
+          "format": "int64"
+        },
+        "isAvailable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "v1CreateProductResponse": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "$ref": "#/definitions/v1Product"
+        }
+      }
+    },
     "v1CreateRoleResponse": {
       "type": "object",
       "properties": {
@@ -428,10 +958,55 @@
         }
       }
     },
+    "v1CreateStoreRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1CreateStoreResponse": {
+      "type": "object",
+      "properties": {
+        "store": {
+          "$ref": "#/definitions/v1Store"
+        }
+      }
+    },
+    "v1DeleteCategoryResponse": {
+      "type": "object"
+    },
     "v1DeleteDriverResponse": {
       "type": "object"
     },
+    "v1DeleteProductResponse": {
+      "type": "object"
+    },
     "v1DeleteRoleResponse": {
+      "type": "object"
+    },
+    "v1DeleteStoreResponse": {
       "type": "object"
     },
     "v1Driver": {
@@ -498,12 +1073,28 @@
         }
       }
     },
+    "v1GetCategoryResponse": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/v1Category"
+        }
+      }
+    },
     "v1GetDriverResponse": {
       "type": "object",
       "properties": {
         "driver": {
           "$ref": "#/definitions/v1Driver",
           "title": "The retrieved driver"
+        }
+      }
+    },
+    "v1GetProductResponse": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "$ref": "#/definitions/v1Product"
         }
       }
     },
@@ -516,12 +1107,35 @@
         }
       }
     },
+    "v1GetStoreResponse": {
+      "type": "object",
+      "properties": {
+        "store": {
+          "$ref": "#/definitions/v1Store"
+        }
+      }
+    },
     "v1GetUserResponse": {
       "type": "object",
       "properties": {
         "user": {
           "$ref": "#/definitions/v1User",
           "description": "The retrieved user."
+        }
+      }
+    },
+    "v1ListCategoriesResponse": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Category"
+          }
+        },
+        "nextPageToken": {
+          "type": "string"
         }
       }
     },
@@ -555,6 +1169,21 @@
         }
       }
     },
+    "v1ListStoresResponse": {
+      "type": "object",
+      "properties": {
+        "stores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Store"
+          }
+        },
+        "nextPageToken": {
+          "type": "string"
+        }
+      }
+    },
     "v1LoginRequest": {
       "type": "object",
       "properties": {
@@ -578,6 +1207,66 @@
         "refreshToken": {
           "type": "string",
           "description": "Refresh token."
+        }
+      }
+    },
+    "v1Product": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "categoryId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "priceCents": {
+          "type": "string",
+          "format": "int64"
+        },
+        "weightGrams": {
+          "type": "string",
+          "format": "int64"
+        },
+        "isAvailable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "v1ProductUpdate": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "priceCents": {
+          "type": "string",
+          "format": "int64"
+        },
+        "weightGrams": {
+          "type": "string",
+          "format": "int64"
+        },
+        "isAvailable": {
+          "type": "boolean"
+        },
+        "categoryId": {
+          "type": "string",
+          "title": "Optional: allow moving product to another category"
         }
       }
     },
@@ -671,12 +1360,95 @@
         }
       }
     },
+    "v1Store": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1StoreUpdate": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1UpdateCategoryResponse": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/v1Category"
+        }
+      }
+    },
     "v1UpdateDriverResponse": {
       "type": "object",
       "properties": {
         "driver": {
           "$ref": "#/definitions/v1Driver",
           "title": "Updated driver"
+        }
+      }
+    },
+    "v1UpdateProductResponse": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "$ref": "#/definitions/v1Product"
+        }
+      }
+    },
+    "v1UpdateStoreResponse": {
+      "type": "object",
+      "properties": {
+        "store": {
+          "$ref": "#/definitions/v1Store"
         }
       }
     },

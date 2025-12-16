@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package catalog.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "catalog/v1/messages.proto";
+
+option go_package = "github.com/escoutdoor/linko/common/pkg/proto/catalog/v1;catalogv1";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Linko Catalog Service"
+    version: "1.0"
+    contact: {
+      name: "Ivan Popov"
+      email: "vanap387@gmail.com"
+    }
+  }
+  schemes: HTTP
+  schemes: HTTPS
+};
+
+service CatalogService {
+    //
+    rpc CreateStore(CreateStoreRequest) returns (CreateStoreResponse) {
+        option (google.api.http) = {
+            post: "/v1/stores"
+            body: "*"
+        };
+    }
+    rpc UpdateStore(UpdateStoreRequest) returns (UpdateStoreResponse) {
+        option (google.api.http) = {
+            patch: "/v1/stores/{store_id}"
+            body: "update"
+        };
+    }
+    rpc DeleteStore(DeleteStoreRequest) returns (DeleteStoreResponse) {
+        option (google.api.http) = {
+            delete: "/v1/stores/{store_id}"  
+        };
+    }
+    rpc GetStore(GetStoreRequest) returns (GetStoreResponse) {
+        option (google.api.http) = {
+            get: "/v1/stores/{store_id}"
+        };
+    }
+    rpc ListStores(ListStoresRequest) returns (ListStoresResponse) {
+        option (google.api.http) = {
+            get: "/v1/stores"
+        };
+    }
+
+    // 
+    rpc CreateCategory(CreateCategoryRequest) returns (CreateCategoryResponse) {
+        option (google.api.http) = {
+            get: "/v1/categories"
+        };
+    }
+    rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse) {
+        option (google.api.http) = {
+            patch: "/v1/categories/{category_id}"
+            body: "update"
+        };
+    }
+    rpc DeleteCategory(DeleteCategoryRequest) returns (DeleteCategoryResponse) {
+        option (google.api.http) = {
+            delete: "/v1/categories/{category_id}"  
+        };
+    }
+    rpc GetCategory(GetCategoryRequest) returns (GetCategoryResponse) {
+        option (google.api.http) = {
+            get: "/v1/categories/{category_id}"
+        };
+    }
+    rpc ListCategories(ListCategoriesRequest) returns (ListCategoriesResponse) {
+        option (google.api.http) = {
+            get: "/v1/categories/{store_id}"
+        };
+    }
+
+    //
+    rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse) {
+        option (google.api.http) = {
+            post: "/v1/products"
+            body: "*"
+        };
+    }
+    rpc UpdateProduct(UpdateProductRequest) returns (UpdateProductResponse) {
+        option (google.api.http) = {
+            patch: "/v1/products/{product_id}"
+            body: "update"
+        };
+    }
+    rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse) {
+        option (google.api.http) = {
+            delete: "/v1/products/{product_id}"  
+        };
+    }
+    rpc GetProduct(GetProductRequest) returns (GetProductResponse) {
+        option (google.api.http) = {
+            get: "/v1/products/{product_id}"
+        };
+    }
+}

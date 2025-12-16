@@ -1,0 +1,294 @@
+syntax = "proto3";
+package catalog.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/escoutdoor/linko/common/pkg/proto/catalog/v1;catalogv1";
+
+message Store {
+    string id = 1;
+
+    string name = 2;
+
+    string description = 3;
+
+    string image_url = 4;
+
+    string address = 5;
+
+    bool is_active = 6;
+
+    double latitude = 7;
+
+    double longitude = 8;
+}
+
+message Category {
+    string id = 1;
+
+    string store_id = 2;
+
+    string name = 3;
+}
+
+message Product {
+    string id = 1;
+
+    string category_id = 2;
+
+    string name = 3;
+
+    string description = 4;
+
+    string image_url = 5;
+
+    int64 price_cents = 6;
+
+    int64 weight_grams = 7;
+
+    bool is_available = 8;
+}
+
+message CreateStoreRequest {
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+
+  string description = 2;
+
+  optional string image_url = 3 [
+    (buf.validate.field).string.uri = true
+  ];
+
+  string address = 4 [(buf.validate.field).string.min_len = 1];
+
+  bool is_active = 5;
+
+  double latitude = 6 [(buf.validate.field).double = {gte: -90, lte: 90}];
+
+  double longitude = 7 [(buf.validate.field).double = {gte: -180, lte: 180}];
+}
+
+message CreateStoreResponse {
+  Store store = 1;
+}
+
+message StoreUpdate {
+  string name = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string.min_len = 1
+  ];
+  
+  string description = 2;
+
+  string image_url = 3 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string.uri = true
+  ];
+  
+  string address = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string.min_len = 1
+  ];
+  
+  bool is_active = 5;
+  
+  double latitude = 6 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).double = {gte: -90, lte: 90}
+  ];
+  
+  double longitude = 7 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).double = {gte: -180, lte: 180}
+  ];
+}
+
+message UpdateStoreRequest {
+  string store_id = 1 [(buf.validate.field).string.uuid = true];
+  
+  StoreUpdate update = 2;
+  
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message UpdateStoreResponse {
+  Store store = 1;
+}
+
+message DeleteStoreRequest {
+  string store_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message DeleteStoreResponse {}
+
+message GetStoreRequest {
+  string store_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetStoreResponse {
+  Store store = 1;
+}
+
+message ListStoresRequest {
+  int32 page_size = 1 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  string page_token = 2;
+}
+
+message ListStoresResponse {
+  repeated Store stores = 1;
+  string next_page_token = 2;
+}
+
+//
+message CreateCategoryRequest {
+  string store_id = 1 [(buf.validate.field).string.uuid = true];
+  string name = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message CreateCategoryResponse {
+  Category category = 1;
+}
+
+message CategoryUpdate {
+  string name = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string.min_len = 1
+  ];
+}
+
+message UpdateCategoryRequest {
+  string category_id = 1 [(buf.validate.field).string.uuid = true];
+  
+  CategoryUpdate update = 2;
+  
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message UpdateCategoryResponse {
+  Category category = 1;
+}
+
+message DeleteCategoryRequest {
+  string category_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message DeleteCategoryResponse {}
+
+message GetCategoryRequest {
+  string category_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetCategoryResponse {
+  Category category = 1;
+}
+
+message ListCategoriesRequest {
+  // To list categories, we must know the store
+  string store_id = 1 [(buf.validate.field).string.uuid = true];
+  
+  int32 page_size = 2 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  string page_token = 3;
+}
+
+message ListCategoriesResponse {
+  repeated Category categories = 1;
+  string next_page_token = 2;
+}
+
+
+// 
+
+message CreateProductRequest {
+  string category_id = 1 [(buf.validate.field).string.uuid = true];
+  
+  string name = 2 [(buf.validate.field).string.min_len = 1];
+
+  string description = 3;
+
+  optional string image_url = 4 [
+    (buf.validate.field).string.uri = true
+  ];
+  
+  int64 price_cents = 5 [(buf.validate.field).int64.gte = 0];
+  int64 weight_grams = 6 [(buf.validate.field).int64.gte = 0];
+  
+  bool is_available = 7;
+}
+
+message CreateProductResponse {
+  Product product = 1;
+}
+
+message ProductUpdate {
+  string name = 1 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string.min_len = 1
+  ];
+  
+  string description = 2;
+
+  string image_url = 3 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string.uri = true
+];
+  
+  int64 price_cents = 4 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).int64.gte = 0
+  ];
+  
+  int64 weight_grams = 5 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).int64.gte = 0
+  ];
+  
+  bool is_available = 6 [(buf.validate.field).ignore = IGNORE_IF_UNPOPULATED];
+  
+  // Optional: allow moving product to another category
+  string category_id = 7 [
+    (buf.validate.field).ignore = IGNORE_IF_UNPOPULATED,
+    (buf.validate.field).string.uuid = true
+  ];
+}
+
+message UpdateProductRequest {
+  string product_id = 1 [(buf.validate.field).string.uuid = true];
+  
+  ProductUpdate update = 2;
+  
+  google.protobuf.FieldMask update_mask = 3;
+}
+
+message UpdateProductResponse {
+  Product product = 1;
+}
+
+message DeleteProductRequest {
+  string product_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message DeleteProductResponse {}
+
+message GetProductRequest {
+  string product_id = 1 [(buf.validate.field).string.uuid = true];
+}
+
+message GetProductResponse {
+  Product product = 1;
+}
+
+message ListProductsRequest {
+  // Usually we filter products by category
+  optional string category_id = 1 [
+    (buf.validate.field).string.uuid = true
+  ];
+  
+  int32 page_size = 2 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
+  string page_token = 3;
+}
+
+message ListProductsResponse {
+  repeated Product products = 1;
+  string next_page_token = 2;
+}
